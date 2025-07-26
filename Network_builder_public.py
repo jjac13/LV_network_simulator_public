@@ -25,9 +25,6 @@ from numpy import arange, array
 global t_registry
 t_registry = []
 
-import warnings
-warnings.filterwarnings("ignore")
-
 ###############################################################################
     
 def Create_loads(DF_Network, Network_headers, Load_data = True, show_plots = False, csv_name = 'S_n_test.csv', csv_address = '', csv_delim = ',', t = 365*24*4):
@@ -88,7 +85,6 @@ def Create_admittance_matrix(DF_Network, Network_headers, show_heatmap = False):
 
         import matplotlib.pylab as plt
         plt.rcParams.update({
-        #    "text.usetex": True,
             "font.family": "Times New Roman",
             'font.size': 16
         })
@@ -703,7 +699,7 @@ def heuristic_control(T_in, T_set, T_amb, T_TESS_0, T_ret, T_soil, G, P_Load, P_
 
 def GA_control(T_in, T_set, T_amb, T_TESS_0, T_ret, T_soil, G, P_Load, P_grid_DSO, top, SoC_0, costs, Capacity_BESS, P_PV_av, horizon = 0, P_BESS_max = 10, Capacity_BESS_BoL = 10, enable_HP_2_TESS = True, external_control = False, SoC_BESS_min = 0.9, SoC_BESS_max = 0.2, m = 4000, TESS_min_op_T = 55 + 273, TESS_max_op_T = 90 + 273, T_TESS_min = 50 + 273, T_TESS_max = 90 + 273, m_dot = 0.22, c_f = 4200, dt = 0.25, House_type = 'apartment'):
     from MCES_library import HP_Power, update_TESS, new_house_Temperature, House_Thermal_Losses
-    from GA_Optimization_lib import GA_Optimization
+    from GA_EMS import GA_Optimization
        
     best_candidate = GA_Optimization(T_amb, T_in, T_set, T_soil, P_PV_av, P_Load, G, T_TESS_0, SoC_0, horizon, costs) # consecutive_generations = 5, individuals = 200, beta = 6, theta_E = 0.483*0.25/2, theta_T = 1/1, theta_CO2 = 1/2.5)
     
@@ -772,7 +768,7 @@ def Local_Control(Network_headers, selection, remaining, df_P_PV_av, df_P_PV, df
 
 
     elif control_type == 'GA':
-        from GA_Optimization_lib import TS_forecast
+        from GA_EMS import TS_forecast
         
         h = ts + horizon + 1        
         
@@ -1258,7 +1254,6 @@ def count_V_compliance(Case_n, lim = 0.05, percentage = True, index = 4, V_feede
 ###############################################################################
 
 def Plot_grid_behaviour(case_n, case_centralized, node = 17, i = -1, start = 0, end = 1, penetrations = [10*i for i in arange(1,10,1)], V_feeder = 400):
-    from numpy import array#linspace, sin, pi
     import matplotlib.pylab as plt
 
     plt.rcParams.update({

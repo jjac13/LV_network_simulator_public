@@ -24,6 +24,9 @@ import pandas as pd
 from numpy import array
 from Network_builder_public import *
 
+import warnings
+warnings.filterwarnings("ignore")
+
 global t_registry
 t_registry = []
   
